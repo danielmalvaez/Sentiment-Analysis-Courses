@@ -13,30 +13,33 @@ README language available :
 
 **Español**
 -------------------------
-Objetivo:
+### Objetivo:
 
 La finalidad de este proyecto es hacer un archivo ejecutable que entregue un reporte (análisis) sobre las opiniones de un curso en una plataforma.
 
 
-Objetivo Específico:
+### Objetivo Específico:
 
 * Script que permita descargar las librerías (python) necesarias para el análisis
 * Script que genere un archivo pdf con el reporte análisis (genérico) de las opiniones
 
-Retos:
+### Retos:
 
 * Las opiniones y comentarios del curso no se pueden descargar en un archivo excel ni en algún otro documento de texto. Estos tienen que ser copiados y pegados, trayendo consigo información relevante pero no estructurada. Esto causa que se tenga una tabla con una columna. En el primer renglón aparece el nombre de la persona que escribió el comentario, en el segundo el nombre del comentario y en el tercero el comentario en sí. Este patrón se repite para cada uno de los diferentes comentarios orientados a dicho curso.
 
-Requisitos:
+### Requisitos:
 
-* Archivo excel con el formato anterior. Una columna. 1. Nombre persona. 2. Nombre comentario. 3. Comentario (se repite el patrón para cada comentario hecho). Es decir cada 3 filas habrá un comentario distinto.
+* Excel : Crear un archivo con extensión **.xlsx**. Posteriormente en una hoja dentro de dicho excel llamada **Opiniones** pegar todos los comentarios obtenidos de la plataforma con la estructura antes mencionada (*1. Nombre persona. 2. Nombre comentario. 3. Comentario*). Ejemplo:
 
-* Librerías descargadas y atualizadas. (Basta con correr el shell script con `./initial-libraries.sh`)
-* Python 3 
+	![Ejemplo de imagen](Images/Ejemplo.png)
+
+* Python 3
+
+* Librerías descargadas y atualizadas. Basta con correr el shell script con `./initial-libraries.sh`. Este archivo puede ser encontrado en la carpeta **Scripts**.
 
 ### Exec
 
-Para ejecutar el programa basta con correr el archivo `AnalisisSentimientos.py` que se encuentra en la carpeta **Data**. Este archivo debe de estar en el mismo directorio que el excel que contiene las opiniones (con el formato antes mencionado). El comando genérico es el siguiente:
+Para ejecutar el programa basta con correr el archivo `AnalisisSentimientos.py` que se encuentra en la carpeta **Data**. Este archivo debe de estar en el mismo directorio donde se encuentra nuestro excel que contiene las opiniones (con el formato antes mencionado). El comando genérico es el siguiente:
 
 ```
 py3 AnalisisSentimientos.py <Nombre_Archivo.xlsx>  "<Nombre_del_curso>"

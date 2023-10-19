@@ -103,7 +103,8 @@ def main():
     df[df['Opiniones'] == ''] = np.nan
     df.dropna(inplace = True)
     df.reset_index(drop = True, inplace = True)
-
+    opinions_only = df['Opiniones'].tolist()
+    
     print('traduciendo opiniones...')
     df_trad = df.applymap(traducir)
 
@@ -241,29 +242,36 @@ def main():
     mala_index = -1
 
     example_good_comment = ''
-    example_neutral_comment = ''
+    example_regular_comment = ''
     example_bad_comment = ''
+    
+    elemento_buscado = 'Buena'
+    if elemento_buscado in list(polarity_ranges):
+        buena_index = list(polarity_ranges).index(elemento_buscado)
+        print(f"El índice de '{elemento_buscado}' es: {buena_index}")
+    else:
+        print(f"'{elemento_buscado}' no se encuentra en la lista.")
 
-    counter = 0
-    for i in range(len(polarity_ranges)):
-        if polarity_ranges[i] == 'Buena':
-            buena_index = i
-            counter +=1
-        elif polarity_ranges[i] == 'Regular':
-            regular_index = i
-            counter +=1
-        elif polarity_ranges[i] == 'Mala':
-            mala_index = i
-            counter +=1
-        if counter == 3:
-            break
+    elemento_buscado = 'Regular'
+    if elemento_buscado in list(polarity_ranges):
+        regular_index = list(polarity_ranges).index(elemento_buscado)
+        print(f"El índice de '{elemento_buscado}' es: {regular_index}")
+    else:
+        print(f"'{elemento_buscado}' no se encuentra en la lista.")
+
+    elemento_buscado = 'Mala'
+    if elemento_buscado in list(polarity_ranges):
+        mala_index = list(polarity_ranges).index(elemento_buscado)
+        print(f"El índice de '{elemento_buscado}' es: {mala_index}")
+    else:
+        print(f"'{elemento_buscado}' no se encuentra en la lista.")
         
     idx = [buena_index, regular_index, mala_index]
     for i in range(len(idx)):
         if idx[i] != -1 and i == 0:
             example_good_comment = opinions_only[idx[i]]
         elif idx[i] != -1 and i == 1:
-            example_neutral_comment = opinions_only[idx[i]]
+            example_regular_comment = opinions_only[idx[i]]
         elif idx[i] != -1 and i == 2:
             example_bad_comment = opinions_only[idx[i]]
         else:
@@ -273,7 +281,7 @@ def main():
     story.append(Spacer(1, 12))
     story.append(Paragraph(f"Comentario Bueno: {example_good_comment}", normal_style))
     story.append(Spacer(1, 12))
-    story.append(Paragraph(f"Comentario Neutro: {example_neutral_comment}", normal_style))
+    story.append(Paragraph(f"Comentario Neutro: {example_regular_comment}", normal_style))
     story.append(Spacer(1, 12))
     story.append(Paragraph(f"Comentario Malo: {example_bad_comment}", normal_style))
     
