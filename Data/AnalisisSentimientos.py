@@ -147,34 +147,27 @@ def main():
     # Labels and Title
     plt.xlabel('Clasificación', fontweight='bold', labelpad=4, fontfamily='Arial')
     plt.ylabel('Frecuencia', fontweight='bold', labelpad=4, fontfamily='Arial')
-    plt.title('Comportamiento de las opiniones del curso "Higiene de Manos"',
+    plt.title(f'Comportamiento de las opiniones del curso {course_name}',
               fontsize=16, fontweight='bold', pad=20, loc='center', fontfamily='Arial')
 
     # Save the figure and show
     plt.savefig('Opiniones.png', dpi=300, bbox_inches='tight', format="png")
-    #plt.show()
-
-    print('Cierra la imagen para continuar...')
 
     # --------------------------
     # Generating the PDF report
     # --------------------------
     
+    # Number of opinions by type
     total_opinions = len(df_cleaned)
     good_ops = polarity_ranges.value_counts()['Buena']
     regular_ops = polarity_ranges.value_counts()['Regular']
     bad_ops = polarity_ranges.value_counts()['Mala']
 
-    # We set the score for each type of opinion
+    # Calculate the overall score
     score_bad = 1
     score_regular = 3
     score_good = 5
-
-    # Calculate the overall score
     overall_score = (bad_ops * score_bad) + (regular_ops * score_regular) + (good_ops * score_good)
-
-    # Print the overall score
-    print(f"Puntaje Total: {overall_score / total_opinions} estrellas")
 
     # Create a PDF file
     pdf_path = f"Reporte del curso {course_name}.pdf"
@@ -248,23 +241,14 @@ def main():
     elemento_buscado = 'Buena'
     if elemento_buscado in list(polarity_ranges):
         buena_index = list(polarity_ranges).index(elemento_buscado)
-        print(f"El índice de '{elemento_buscado}' es: {buena_index}")
-    else:
-        print(f"'{elemento_buscado}' no se encuentra en la lista.")
 
     elemento_buscado = 'Regular'
     if elemento_buscado in list(polarity_ranges):
         regular_index = list(polarity_ranges).index(elemento_buscado)
-        print(f"El índice de '{elemento_buscado}' es: {regular_index}")
-    else:
-        print(f"'{elemento_buscado}' no se encuentra en la lista.")
 
     elemento_buscado = 'Mala'
     if elemento_buscado in list(polarity_ranges):
         mala_index = list(polarity_ranges).index(elemento_buscado)
-        print(f"El índice de '{elemento_buscado}' es: {mala_index}")
-    else:
-        print(f"'{elemento_buscado}' no se encuentra en la lista.")
         
     idx = [buena_index, regular_index, mala_index]
     for i in range(len(idx)):
