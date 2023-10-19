@@ -49,4 +49,4 @@ Esta ejecución tardará aproximadamente 5 minutos (con 900 comentarios) debido 
 
 ### Resultados
 
-En la misma carpeta en la que se alojan el script y los datos (**Data**) se guardará el archivo en formato PDF que contendrá el reporte del análisis.
+En la misma carpeta en la que se alojan el script y los datos (**Data**) se guardará el archivo en formato PDF que contendrá el reporte del análisis. El nombre que hayas introducido en el segundo argumento al momento de ejecutar el script `"<Nombre_del_curso>"` será el nombre el cuál se utilizará para las gráficas y títulos donde sea necesario poner el título del curso.

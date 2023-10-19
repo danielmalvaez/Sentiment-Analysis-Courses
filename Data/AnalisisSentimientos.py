@@ -11,8 +11,8 @@ Catching up the notebook:
     2. Run the script:
         $ python3 AnalisisSentimientos.py Excel_File Course_Name
     3. The script will generate a PNG image with the results and a PDF report.
-    4. The PNG image will be saved as "Opiniones.png"
-    5. The PDF report will be saved as "Reporte Higiene Manos.pdf"
+    4. The PNG image will be saved as 'Opiniones.png'
+    5. The PDF report will be saved as 'Reporte Higiene Manos.pdf'
     6. The script will print the total score of the course in stars.
     7. The script will print the PDF path.
 '''
@@ -37,8 +37,8 @@ from unidecode import unidecode
 # Report Generation
 from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Frame
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, PageBreak
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle, TA_JUSTIFY
 
 # Regular Expressions
 import re
@@ -53,11 +53,12 @@ import datetime
 # Defining the functions to use
 # ------------------------------
 def quitar_caracteres_especiales(texto):
-    # Utiliza una expresión regular para eliminar caracteres especiales excepto los acentos
+    # Regex for special characters
     texto_limpio = re.sub(r'[^a-zA-Z\sáéíóúñ]', '', texto)
     return texto_limpio
 
 def traducir(opinion):
+    # Translate the opinion into english
     opinion_trad = GoogleTranslator(source='es', target='en').translate(opinion)
     opinion_trad = unidecode(opinion_trad)
     opinion_trad = opinion_trad.lower()
@@ -65,6 +66,7 @@ def traducir(opinion):
     return opinion_trad
 
 def quitar_stops(texto, stop_words = stopwords.words('english')):
+    # Remove stopwords
     texto_limpio = ' '.join([word for word in texto.split() if word not in stop_words])
     return texto_limpio
 
@@ -151,7 +153,7 @@ def main():
               fontsize=16, fontweight='bold', pad=20, loc='center', fontfamily='Arial')
 
     # Save the figure and show
-    plt.savefig('Opiniones.png', dpi=300, bbox_inches='tight', format="png")
+    plt.savefig('Opiniones.png', dpi=300, bbox_inches='tight', format='png')
 
     # --------------------------
     # Generating the PDF report
@@ -163,14 +165,14 @@ def main():
     regular_ops = polarity_ranges.value_counts()['Regular']
     bad_ops = polarity_ranges.value_counts()['Mala']
 
-    # Calculate the overall score
+    # Calculate the overall score (5 starss)
     score_bad = 1
     score_regular = 3
     score_good = 5
     overall_score = (bad_ops * score_bad) + (regular_ops * score_regular) + (good_ops * score_good)
 
     # Create a PDF file
-    pdf_path = f"Reporte del curso {course_name}.pdf"
+    pdf_path = f'Reporte del curso {course_name}.pdf'
     doc = SimpleDocTemplate(pdf_path, pagesize=letter)
 
     # Create a list to hold the story (elements to be added to the PDF)
@@ -178,55 +180,84 @@ def main():
     
     # Define styles
     styles = getSampleStyleSheet()
-    normal_style = styles["Normal"]
-    title_style = styles["Title"]
-    bold_style = styles["Normal"]
-    bold_style.fontName = "Helvetica-Bold"  # Establecer fuente en negrita
+    normal_style = styles['Normal']
+    title_style = styles['Title']
+    heading_style = styles['Heading2']
+    # Crear un estilo personalizado con alineación justificada
+    custom_style = ParagraphStyle(name="CustomStyle", parent=styles["Normal"], alignment=TA_JUSTIFY)
 
     # Add the current date and author
-    current_date = datetime.datetime.now().strftime("%Y-%m-%d")
-    author = "Axel Daniel Malváez Flores"  # Reemplaza con el nombre del autor
-
-    date_paragraph = Paragraph(f"<b>Fecha del Informe:</b> {current_date}", bold_style)
-    author_paragraph = Paragraph(f"<b>Autor:</b> {author}", bold_style)
+    current_date = datetime.datetime.now().strftime('%Y-%m-%d')
+    author = 'Axel Daniel Malváez Flores' 
+    date_paragraph = Paragraph(f'<b>Fecha del Informe:</b> {current_date}', normal_style)
+    author_paragraph = Paragraph(f'<b>Autor:</b> {author}', normal_style)
 
     story.append(date_paragraph)
     story.append(author_paragraph)
     story.append(Spacer(1, 12))
 
     # Add a title to the PDF
-    title = Paragraph(f"Informe de Análisis de Sentimientos para el Curso {course_name}", title_style)
+    title = Paragraph(f'Informe de Análisis de Sentimientos para el Curso {course_name}', title_style)
     story.append(title)
     story.append(Spacer(1, 12))
+    
+    # Introduction Seccion
+    introduction = f'''
+    Este informe de análisis de sentimientos examina las opiniones enviadas por estudiantes (participantes) del curso {course_name}
+    dentro de la plataforma de la Fundación Academia Aesculap México. Esta plataforma se utiliza para impartir cursos de capacitación
+    en línea para profesionales de la salud. El objetivo de este informe es proporcionar una visión general de las opiniones de los
+    estudiantes y brindar recomendaciones para mejorar la calidad del curso. Link plataforma :<u>http://academiaaesculap.eadbox.com/</u>
+    '''
+    introduction_paragraph = Paragraph(introduction, custom_style)
+    story.append(introduction_paragraph)
+    story.append(Spacer(1, 12))
+    
+    # Methodology Seccion
+    methodology_title = 'Metodología'
+    methodology = f'''
+    Para llevar a cabo este análisis, se recopilaron opiniones de los estudiantes. Estas opiniones se tradujeron al inglés y se
+    limpiaron para eliminar caracteres especiales y palabras vacías. Luego, se analizaron las opiniones utilizando el paquete
+    NLTK de Python. Este paquete utiliza un diccionario de palabras para asignar un puntaje de polaridad a cada palabra. El
+    puntaje de polaridad de cada palabra se promedia para obtener un puntaje de polaridad para cada opinión. Finalmente, se
+    agruparon las opiniones en tres categorías: 'Buenas', 'Regulares' y 'Malas'. Las opiniones 'Buenas' tienen un puntaje de
+    polaridad mayor o igual a 0.3, las opiniones 'Regulares' tienen un puntaje de polaridad mayor o igual a -0.3 y menor a 0.3,
+    y las opiniones 'Malas' tienen un puntaje de polaridad menor a -0.3.
+    '''
+    methodology_paragraph = Paragraph(methodology_title, heading_style)
+    methodology_content = Paragraph(methodology, custom_style)
+    story.append(methodology_paragraph)
+    story.append(methodology_content)
+    story.append(Spacer(1, 12))
+    
+    # Results Seccion
+    results_title = 'Resultados'
 
-    # Add content to the PDF
-    content = f"""
-    La siguiente gráfica nos muestra la cantidad de opiniones malas, regulares y buenas.
-    En este caso tenemos {total_opinions} opiniones en total, de las cuales {good_ops}
-    son buenas, {regular_ops} son regulares y {bad_ops} son malas.
-    """
-    
-    content2 = f"""
-    Si tuvieramos que calificar el curso de 0 a 5 estrellas, el puntaje sería de:
-    {overall_score / total_opinions} estrellas.
-    """
-    
-    # Add an image to the PDF
     original_width = 640
     original_height = 480
     scale_factor = 0.5
     
     new_width = int(original_width * scale_factor)
     new_height = int(original_height * scale_factor)
+    image = Image('Opiniones.png', width=new_width, height=new_height)
     
-    image = Image("Opiniones.png", width=new_width, height=new_height)
+    results = f'''
+    En el siguiente análisis, se presenta una representación gráfica de la distribución de
+    opiniones en el curso. En total, se han evaluado {total_opinions} opiniones. De estas, {good_ops} opiniones
+    son calificadas como 'Buenas', {regular_ops} como 'Regulares' y {bad_ops} como 'Malas'.
+    '''    
+    results_paragraph = Paragraph(results_title, heading_style)
+    results_content = Paragraph(results, custom_style)
+    story.append(results_paragraph)
     story.append(image)
-
-    content_paragraph = Paragraph(content, normal_style)
-    story.append(content_paragraph)
+    story.append(results_content)
     story.append(Spacer(1, 12))
-    content_paragraph2 = Paragraph(content2, normal_style)
-    story.append(content_paragraph2)
+    
+    results2 = f'''
+    Si evaluáramos el curso en una escala de 0 a 5 estrellas, el puntaje promedio sería de
+    {overall_score / total_opinions:.2f} estrellas.
+    '''
+    results2_paragraph = Paragraph(results2, custom_style)
+    story.append(results2_paragraph)
     story.append(Spacer(1, 12))
     
     # Obtenemos un ejemplo de cada tipo de comentario
@@ -261,17 +292,30 @@ def main():
         else:
             continue
 
-    story.append(Paragraph("Ejemplos de Comentarios:", normal_style))
+    story.append(Paragraph('Ejemplos de Comentarios:', custom_style))
     story.append(Spacer(1, 12))
-    story.append(Paragraph(f"Comentario Bueno: {example_good_comment}", normal_style))
+    story.append(Paragraph(f'<b>Comentario Bueno:</b> {example_good_comment}', custom_style))
     story.append(Spacer(1, 12))
-    story.append(Paragraph(f"Comentario Neutro: {example_regular_comment}", normal_style))
+    story.append(Paragraph(f'<b>Comentario Regular:</b> {example_regular_comment}', custom_style))
     story.append(Spacer(1, 12))
-    story.append(Paragraph(f"Comentario Malo: {example_bad_comment}", normal_style))
+    story.append(Paragraph(f'<b>Comentario Malo:</b> {example_bad_comment}', custom_style))
+    
+    # Recomendaciones
+    recommendations_title = 'Recomendaciones'
+    recommendations = '''
+    Considerando los resultados del análisis de sentimientos, se recomienda implementar un enfoque
+    equilibrado para abordar las opiniones críticas ('Malas') y mantener la satisfacción de los
+    estudiantes que han expresado opiniones positivas ('Buenas'). Esto implica mejorar las áreas que
+    generan opiniones negativas y mantener o reforzar las prácticas que resultan en opiniones positivas.
+    '''
+    recommendations_paragraph = Paragraph(recommendations_title, heading_style)
+    recommendations_content = Paragraph(recommendations, custom_style)
+    story.append(recommendations_paragraph)
+    story.append(recommendations_content)
     
     # Build the PDF
     doc.build(story)
-    print(f"PDF generado como : {pdf_path}")
+    print(f'PDF generado como : {pdf_path}')
     
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
