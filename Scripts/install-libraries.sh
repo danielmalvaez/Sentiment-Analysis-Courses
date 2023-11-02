@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Definir las bibliotecas necesarias
-libraries=("numpy" "pandas" "seaborn" "matplotlib" "deep-translator" "nltk" "unidecode" "reportlab" "datetime")
+libraries=("numpy" "pandas" "seaborn" "matplotlib" "deep-translator" "nltk" "unidecode" "reportlab" "datetime" "openpyxl")
 
 # Verificar si Python está instalado
 if command -v python3 &>/dev/null; then

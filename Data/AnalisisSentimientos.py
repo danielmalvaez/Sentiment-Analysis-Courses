@@ -32,6 +32,7 @@ from deep_translator import GoogleTranslator
 import nltk
 from nltk.sentiment import SentimentIntensityAnalyzer
 from nltk.corpus import stopwords
+nltk.download('stopwords')
 from unidecode import unidecode
 
 # Report Generation
