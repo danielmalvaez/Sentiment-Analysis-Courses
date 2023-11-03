@@ -31,7 +31,7 @@ La finalidad de este proyecto es hacer un archivo ejecutable que entregue un rep
 
 * Excel : Crear un archivo con extensión **.xlsx**. Posteriormente en una hoja dentro de dicho excel llamada **Opiniones** pegar todos los comentarios obtenidos de la plataforma con la estructura antes mencionada (*1. Nombre persona. 2. Nombre comentario. 3. Comentario*). Ejemplo:
 
-	![Ejemplo de imagen](Images/Ejemplo.png)
+	![Ejemplo de imagen](Images/Ejemplo2.png)
 
 * Python 3
 
